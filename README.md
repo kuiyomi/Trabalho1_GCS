@@ -7,3 +7,8 @@ Este repositório contém a descrição e os requisitos para o Trabalho 1 da dis
 ## Considerações de desenvolvimento
 
 Para este desenvolvimento o processo de branching escolhido foi o Gitflow e Java será a linguagem utilizada para a implementação do sistema.
+
+## Features desenvolvidas
+
+- A constar
+- ...
