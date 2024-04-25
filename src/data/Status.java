@@ -3,7 +3,8 @@ package data;
 public enum Status {
     ABERTO("Aberto"), 
     APROVADO("Aprovado"),
-    REPROVADO("Reprovado");
+    REPROVADO("Reprovado"),
+    CONCLUIDO("Concluido");
 
     private final String status;
 
