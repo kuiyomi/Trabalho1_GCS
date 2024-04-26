@@ -1,39 +1,36 @@
 package app;
+
 import java.util.Scanner;
 
 import data.Funcionario;
+import data.Usuario;
 
 public class App {
-   
+    
+    private static final FUNCIONARIOS = 15;
 }
 
-public void menu(){
-    Scanner sc = new Scanner(System.in);
-    int opcao;
-    System.out.println("Menu:");
-    do{
-        System.out.println("1: Consulta lista de funcionários");
-        System.out.println("2: Logar");
-        opcao = sc.nextInt();
-    }while(!(opcao == 1 || opcao ==2));
+    public void menu() {
 
-    switch(opcao){
-        case 1: //MÉTODO DE LISTA DE FUNCIONARIOS
-            break;
-
-        case 2: //METODO LOGIN
-            break;
+        //As opções para o usuario escolher
     }
 
+    private static void inicializaDados() {
 
+        Funcionario[] funcionarios = new Funcionario[FUNCIONARIOS];
+        funcionarios[0] = new Funcionario("Paulo Plinio", "Financeiro", departamentos[0]);
+        funcionarios[1] = new Funcionario("Betina Hugendobler", "Recursos Humanos", departamentos[1]);
+        funcionarios[2] = new Funcionario("Vini VP", "Manutencao", departamentos[2]);
+        funcionarios[3] = new Funcionario("Pedro MP", "Engenharia", departamentos[3]);
+        funcionarios[4] = new Funcionario("Lucas Meio", "Juridco", departamentos[4]);
 
+        // Para inicializar os pedidos, no caso, começando com nenhum pedido
+        pedidos = new Pedido[0];
+    }
 
-    System.out.println("Digite a matrícula para se logar...");
-    do{
-        System.out.print("Digite uma matrícula válida: ");
-        /*int matricula = sc.nextInt(); Insere matrícula 
-    }while(!Usuario.NomeMetodoConsultaPorMatricula(matricula))*/ 
-
-
+private static void alteraUsuario(){
+    Scanner sc = new Scanner(System.in);
+        System.out.println("Sistema de Controle de Aquisições - Alteração de Usuário");
+        System.out.print("Insira a matrícula do usuário: ");
+        int matricula = sc.nextInt();
 }
-
