@@ -1,3 +1,6 @@
+package data;
+
+
 public enum TipoDepartamento{
     
     FINANCEIRO("Financeiro", 10000.00), 
