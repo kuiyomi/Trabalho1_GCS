@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Usuario {
     protected String nome;
-    protected int id;
+    protected static int id;
     protected Departamento departamento;
     protected ArrayList<Usuario> usuarios; 
 
@@ -19,7 +19,7 @@ public abstract class Usuario {
         return nome;
     }
 
-    public int getId(){
+    public static int getId(){
         return id;
     }
 
@@ -28,8 +28,21 @@ public abstract class Usuario {
     }
 
     public boolean adicionaUsuario(Usuario u){
-        return this.usuarios.add(u);
+        if (consultaUsuario(u.getId())!= null ) {
+            return false; 
+        }
+        return usuarios.add(u);
     }
+
+    public Usuario consultaUsuario(int id){
+        for(Usuario u : usuarios){
+            if (Usuario.getId() == id) {
+                return u;
+            }
+        }
+            return null; 
+        }
+    
     
     public abstract String toString();
         
