@@ -36,7 +36,7 @@ public abstract class Usuario {
 
     public Usuario consultaUsuario(int id){
         for(Usuario u : usuarios){
-            if (Usuario.getId() == id) {
+            if (u.getId() == id) {
                 return u;
             }
         }
