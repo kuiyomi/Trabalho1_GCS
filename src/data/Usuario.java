@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public abstract class Usuario {
     protected String nome;
-    protected static int id;
+    protected int id;
     protected Departamento departamento;
-    protected ArrayList<Usuario> usuarios; 
+    private static ArrayList<Usuario> usuarios; 
 
     public Usuario (String nome, Departamento departamento, int id) {
         this.nome = nome;
@@ -19,7 +19,7 @@ public abstract class Usuario {
         return nome;
     }
 
-    public static int getId(){
+    public int getId(){
         return id;
     }
 
