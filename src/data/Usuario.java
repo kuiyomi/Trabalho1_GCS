@@ -1,30 +1,36 @@
 package data;
 
+import java.util.ArrayList;
+
 public abstract class Usuario {
     protected String nome;
-    protected int ID;
+    protected int id;
     protected Departamento departamento;
-    private TipoUsuario tipo;
+    protected ArrayList<Usuario> usuarios; 
 
-    public Usuario (String nome, TipoUsuario tipo, Departamento departamento) {
+    public Usuario (String nome, Departamento departamento, int id) {
         this.nome = nome;
-        this.tipo = tipo;
+        this.id = id; 
         this.departamento = departamento;
+        usuarios = new ArrayList<>();
     }
 
     public String getNome() {
         return nome;
     }
 
-    public TipoUsuario getTipo() {
-        return tipo;
+    public int getId(){
+        return id;
     }
 
     public Departamento getDepartamento() {
         return departamento;
     }
-    /*
-     * Favor implementar a classe "Departamento" e a classe "enum" equivalente aos
-     * tipo de departamentos que forem definidos entre o grupo
-     */
+
+    public boolean adicionaUsuario(Usuario u){
+        return this.usuarios.add(u);
+    }
+    
+    public abstract String toString();
+        
 }
