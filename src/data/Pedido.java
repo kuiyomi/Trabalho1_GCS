@@ -2,7 +2,7 @@ package data;
 
 import java.util.ArrayList;
 
-public class Pedidos {
+public class Pedido {
     private Usuario u;
     //private Departamento d; Adicionar depois da implementação da classe Departamento
     private String data;
@@ -12,7 +12,7 @@ public class Pedidos {
     private double valorDoPedido;
     
 
-    public Pedidos(Usuario u, String data, String dataDeConclusao, Status status, ArrayList<Item> lista, double valorDoPedido) {
+    public Pedido(Usuario u, String data, String dataDeConclusao, Status status, ArrayList<Item> lista, double valorDoPedido) {
         this.u = u;
         this.data = data;
         this.dataDeConclusao = dataDeConclusao;
