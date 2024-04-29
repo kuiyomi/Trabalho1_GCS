@@ -1,8 +1,8 @@
 package data;
 
 public class Funcionario extends Usuario {
-    public Funcionario (String nome, int id, Departamento departamento) {
-        super(nome, id, departamento);
+    public Funcionario (String nome, Departamento departamento, int id) {
+        super(nome, departamento, id);
     }
 
 public String toString(){
