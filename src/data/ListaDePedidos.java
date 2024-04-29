@@ -71,7 +71,7 @@ public class ListaDePedidos {
     // Falta implementar
     public ArrayList<Pedido> pesquisaPorData(String dataInicio, String dataFim){
         ArrayList<Pedido> lista = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate data1 = LocalDate.parse(dataInicio, formatter);
         LocalDate data2 = LocalDate.parse(dataFim, formatter);
         for(Pedido aux : listaPedidos){
