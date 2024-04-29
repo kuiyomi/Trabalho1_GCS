@@ -88,5 +88,19 @@ public class Pedido {
             setValorDoPedido(i.getValorUnitario());
             return true;
     }
+
+    public String toString() {
+        return "{" +
+            " u='" + getU() + "'" +
+            ", id='" + getId() + "'" +
+            ", data='" + getData() + "'" +
+            ", dataDeConclusao='" + getDataDeConclusao() + "'" +
+            ", status='" + getStatus() + "'" +
+            ", lista='" + getLista() + "'" +
+            ", valorDoPedido='" + getValorDoPedido() + "'" +
+            ", departamento='" + getDepartamento() + "'" +
+            "}";
+    }
+
     
 }
