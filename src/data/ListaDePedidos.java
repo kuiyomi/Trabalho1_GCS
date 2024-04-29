@@ -1,5 +1,6 @@
 package data;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ListaDePedidos {
@@ -68,7 +69,22 @@ public class ListaDePedidos {
         return false;
     }
     // Falta implementar
-    public ArrayList<Pedido> pesquisaPorData(String data){
+    public ArrayList<Pedido> pesquisaPorData(String dataInicio, String dataFim){
+        ArrayList<Pedido> lista = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate data1 = LocalDate.parse(dataInicio, formatter);
+        LocalDate data2 = LocalDate.parse(dataFim, formatter);
+        for(Pedido aux : listaPedidos){
+            LocalDate dataAux = LocalDate.parse(aux.getData(), formatter);
+            if(dataAux.isEqual(data1)||dataAux.isAfter(data1)){
+                if (dataAux.isEqual(data2)||dataAux.isBefore(data2)) {
+                   lista.add(aux); 
+                }
+            }
+        }
+        if (!lista.isEmpty()) {
+            return lista;
+        }
         return null;
     }
 
