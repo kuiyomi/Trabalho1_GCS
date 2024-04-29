@@ -1,8 +1,6 @@
 package data;
 
-
 public enum TipoDepartamento{
-    
     FINANCEIRO("Financeiro", 10000.00), 
     JURIDICO("Jurídico", 10000.00), 
     RECURSOS_HUMANOS("Recursos Humanos", 10000.00), 

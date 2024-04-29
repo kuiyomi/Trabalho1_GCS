@@ -3,8 +3,8 @@ package data;
 import java.util.ArrayList;
 
 public class Pedido {
-    private Usuario u;
-    private int id;
+    private Usuario user; // Atualização da variável 'u' para 'user' com o objetivo de tornar o 
+    private int id;       // código mais compreensível para todos todos desenvolvedores do grupo
     private String data;
     private String dataDeConclusao;
     private Status status;
@@ -13,19 +13,19 @@ public class Pedido {
     private TipoDepartamento departamento;
     
 
-    public Pedido(Usuario u, int id, String data, String dataDeConclusao, Status status, ArrayList<Item> lista) {
-        this.u = u;
+    public Pedido(Usuario user, int id, String data, String dataDeConclusao, Status status, ArrayList<Item> lista) {
+        this.user = user;
         this.id = id;
         this.data = data;
         this.dataDeConclusao = dataDeConclusao;
         this.status = status;
         this.lista = lista;
         this.valorDoPedido = 0;
-        this.departamento = u.getDepartamento().getNome();
+        this.departamento = user.getDepartamento().getNome();
     }
 
-    public Usuario getU() {
-        return this.u;
+    public Usuario getUser() {
+        return this.user;
     }
     public int getId(){
         return id;
@@ -51,12 +51,12 @@ public class Pedido {
         return this.status;
     }
 
-    public boolean setStatus(Status status, Usuario u) {
+    public boolean setStatus(Status status, Usuario user) {
         if(this.status.equals(Status.CONCLUIDO)){
             return false;
         }
         if(status.equals(Status.APROVADO)||status.equals(Status.REPROVADO)){
-            if(u instanceof Administrador){
+            if(user instanceof Administrador){
                 this.status = status;
                 return true;
             }
@@ -80,7 +80,7 @@ public class Pedido {
         if(getStatus().equals(Status.APROVADO)||getStatus().equals(Status.CONCLUIDO)){
             return false;
         }	
-        if((getValorDoPedido()+(i.calcularTotal()))>(u.getDepartamento().getNome().getValorMaximoPedido())){
+        if((getValorDoPedido()+(i.getValorUnitario()))>(user.getDepartamento().getNome().getValorMaximoPedido())){
                 return false;
             }
             lista.add(i);
@@ -99,7 +99,7 @@ public class Pedido {
 
     public String toString() {
         return "{" +
-            " u='" + getU() + "'" +
+            " user='" + getUser() + "'" +
             ", id='" + getId() + "'" +
             ", data='" + getData() + "'" +
             ", dataDeConclusao='" + getDataDeConclusao() + "'" +
@@ -109,6 +109,4 @@ public class Pedido {
             ", departamento='" + getDepartamento() + "'" +
             "}";
     }
-
-    
 }
