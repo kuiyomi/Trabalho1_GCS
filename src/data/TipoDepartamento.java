@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 package data;
+=======
+>>>>>>> 8a375b6cc554abfa086eb9518eb36f47d29049c9
 public enum TipoDepartamento{
     
     FINANCEIRO("Financeiro", 10000.00), 
