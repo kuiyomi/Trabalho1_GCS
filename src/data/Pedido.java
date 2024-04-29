@@ -68,10 +68,6 @@ public class Pedido {
         return this.lista;
     }
 
-    public void setLista(ArrayList<Item> lista) {
-        this.lista = lista;
-    }
-
     public double getValorDoPedido() {
         return this.valorDoPedido;
     }
@@ -81,12 +77,24 @@ public class Pedido {
     }
 
     public boolean addItem(Item i){
-        	if((getValorDoPedido()+(i.getValorUnitario()))>(u.getDepartamento().getNome().getValorMaximoPedido())){
+        if(getStatus().equals(Status.APROVADO)||getStatus().equals(Status.CONCLUIDO)){
+            return false;
+        }	
+        if((getValorDoPedido()+(i.getValorUnitario()))>(u.getDepartamento().getNome().getValorMaximoPedido())){
                 return false;
             }
             lista.add(i);
             setValorDoPedido(i.getValorUnitario());
             return true;
+    }
+
+    public boolean procuraItemDescricao(String d){
+        for(Item aux : lista){
+            if(aux.getDescricao().equals(d)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toString() {
