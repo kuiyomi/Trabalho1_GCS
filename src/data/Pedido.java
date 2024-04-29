@@ -80,11 +80,11 @@ public class Pedido {
         if(getStatus().equals(Status.APROVADO)||getStatus().equals(Status.CONCLUIDO)){
             return false;
         }	
-        if((getValorDoPedido()+(i.getValorUnitario()))>(u.getDepartamento().getNome().getValorMaximoPedido())){
+        if((getValorDoPedido()+(i.calcularTotal()))>(u.getDepartamento().getNome().getValorMaximoPedido())){
                 return false;
             }
             lista.add(i);
-            setValorDoPedido(i.getValorUnitario());
+            setValorDoPedido(i.calcularTotal());
             return true;
     }
 
