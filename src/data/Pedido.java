@@ -31,6 +31,10 @@ public class Pedido {
         return id;
     }
 
+    public TipoDepartamento getDepartamento(){
+        return departamento;
+    }
+
     public String getData() {
         return this.data;
     }
