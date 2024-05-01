@@ -1,15 +1,12 @@
 package data;
 
 public class Funcionario extends Usuario {
-    public Funcionario (String nome, Departamento departamento) {
-        super(nome, TipoUsuario.FUNCIONARIO, departamento);
+    public Funcionario (String nome, Departamento departamento, int id) {
+        super(nome, departamento, id);
     }
 
-    public Departamento getDepartamento() {
-        return departamento;
-    }
-    /*
-     * Favor implementar a classe "Departamento" e a classe "enum" equivalente aos
-     * tipo de departamentos que forem definidos entre o grupo
-     */
+public String toString(){
+    return "Nome: "+this.nome+", Id: "+this.id+", Departamento"+this.departamento+"\n";
+}
+    
 }
