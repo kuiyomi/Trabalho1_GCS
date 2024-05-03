@@ -88,4 +88,24 @@ public class ListaDePedidos {
         return null;
     }
 
+    //Métodos novos adicionados
+    public ArrayList<Pedido> getListaPedidos() {
+        return listaPedidos;
+    }
+
+    public ArrayList<Pedido> buscarPedidosPorStatus(Status status) {
+        ArrayList<Pedido> pedidosPorStatus = new ArrayList<>();
+        for (Pedido pedido : listaPedidos) {
+            if (pedido.getStatus().equals(status)) {
+                pedidosPorStatus.add(pedido);
+            }
+        }
+        
+        if (pedidosPorStatus.isEmpty()) {
+            return null;
+        } else {
+            return pedidosPorStatus;
+        }
+    }
+
 }
