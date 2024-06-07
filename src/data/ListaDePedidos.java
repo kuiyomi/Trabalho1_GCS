@@ -12,31 +12,19 @@ public class ListaDePedidos {
     }
 
     public boolean addPedido(Pedido p) {
-        if (!listaPedidos.contains(p)) { // Adicionado a verificação de existência
-            listaPedidos.add(p);         // do pedido para evitar possíveis erros
-            return true;
-        }
-        return false;
-    }
-
-    public ArrayList<Pedido> pedidoPorDepartamento(TipoDepartamento departamento) {
-        ArrayList<Pedido> pedidosPorDepartamento = new ArrayList<>();
-        for (Pedido pedido : listaPedidos) {
-            if (pedido.getDepartamento() == departamento) {
-                pedidosPorDepartamento.add(pedido);
+        for (Pedido aux : listaPedidos) {
+            if (aux.getId() == p.getId()) {
+                return false;
             }
         }
-        return pedidosPorDepartamento;
+        listaPedidos.add(p);
+        return true;
     }
 
-    public int numeroTotalPedidos() {
-        return listaPedidos.size();
-    }
-
-    public ArrayList<Pedido> pedidoPorFuncionario(Funcionario f){
+    public ArrayList<Pedido> pedidoPorFuncionario(Funcionario f) {
         ArrayList<Pedido> lAux = new ArrayList<>();
-        for(Pedido aux : listaPedidos){
-            if(aux.getUser().getId()==f.getId()){
+        for (Pedido aux : listaPedidos) {
+            if (aux.getUser().getId() == f.getId()) {
                 lAux.add(aux);
             }
         }
@@ -46,10 +34,10 @@ public class ListaDePedidos {
         return null;
     }
 
-    public ArrayList<Pedido> pedidoPorDescricao(String descricao){
+    public ArrayList<Pedido> pedidoPorDescricao(String descricao) {
         ArrayList<Pedido> lAux = new ArrayList<>();
-        for(Pedido aux : listaPedidos){
-            if(aux.procuraItemDescricao(descricao)){
+        for (Pedido aux : listaPedidos) {
+            if (aux.procuraItemDescricao(descricao)) {
                 lAux.add(aux);
             }
         }
@@ -59,23 +47,21 @@ public class ListaDePedidos {
         return null;
     }
 
-    // Pode ser alterado para receber um objeto do tipo Pedido
-    public Pedido visualizaDetalhesID(int id){
-        for(Pedido aux : listaPedidos){
-            if (aux.getId()==id) {
-                aux.toString();
+    public Pedido visualizaDetalhesID(int id) {
+        for (Pedido aux : listaPedidos) {
+            if (aux.getId() == id) {
                 return aux;
             }
         }
         return null;
     }
 
-    public boolean excluiPedido(Funcionario f, Pedido p){
-        for(Pedido aux : listaPedidos){
-            if(p.equals(aux)){
-                if(p.getUser().equals(f)){
+    public boolean excluiPedido(Funcionario f, Pedido p) {
+        for (Pedido aux : listaPedidos) {
+            if (p.equals(aux)) {
+                if (p.getUser().equals(f)) {
                     if (p.getStatus().equals(Status.ABERTO)) {
-                       listaPedidos.remove(aux);
+                        listaPedidos.remove(aux);
                         return true;
                     }
                 }
@@ -84,36 +70,25 @@ public class ListaDePedidos {
         return false;
     }
 
-    //  Método que calcula valor total dos pedidos efetuados para fins 
-    //  de analise financeira e relatórios de desempenho da empresa
-    public double calculaValorTotalPedidos() {
-        double valorTotal = 0;
-        for (Pedido pedido : listaPedidos) {
-            valorTotal += pedido.getValorDoPedido();
-        }
-        return valorTotal;
-    }
-
-    public ArrayList<Pedido> pesquisaPedidosPorData(String dataInicio, String dataFim) {
+    public ArrayList<Pedido> pesquisaPorData(String dataInicio, String dataFim) {
         ArrayList<Pedido> lista = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataInicial = LocalDate.parse(dataInicio, formatter);
-        LocalDate dataFinal = LocalDate.parse(dataFim, formatter);
-    
-        if (dataInicial.isAfter(dataFinal)) {   // Adição da verificação de coerência entre datas de inicio e fim
-            throw new IllegalArgumentException("A data de início deve ser anterior à data de fim");
-        }
-    
-        for (Pedido pedido : listaPedidos) {
-            LocalDate dataPedido = LocalDate.parse(pedido.getData(), formatter);
-            if ((dataPedido.isEqual(dataInicial) || dataPedido.isAfter(dataInicial)) &&
-                (dataPedido.isEqual(dataFinal) || dataPedido.isBefore(dataFinal))) {
-                lista.add(pedido);
+        LocalDate data1 = LocalDate.parse(dataInicio, formatter);
+        LocalDate data2 = LocalDate.parse(dataFim, formatter);
+        for (Pedido aux : listaPedidos) {
+            LocalDate dataAux = LocalDate.parse(aux.getData(), formatter);
+            if (dataAux.isEqual(data1) || dataAux.isAfter(data1)) {
+                if (dataAux.isEqual(data2) || dataAux.isBefore(data2)) {
+                    lista.add(aux);
+                }
             }
         }
-        return lista;
+        if (!lista.isEmpty()) {
+            return lista;
+        }
+        return null;
     }
-    //Métodos novos adicionados
+
     public ArrayList<Pedido> getListaPedidos() {
         return listaPedidos;
     }

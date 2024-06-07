@@ -1,40 +1,24 @@
 package app;
 
-import java.util.Locale;
-import java.util.Scanner;
-import data.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import data.Administrador;
+import data.Departamento;
+import data.Funcionario;
+import data.Item;
+import data.ListaDePedidos;
+import data.Pedido;
+import data.Status;
+import data.TipoDepartamento;
+import data.Usuario;
 
 public class App {
-
-    private static ArrayList<Usuario> usuarios;
-    private static ListaDePedidos listaDePedidos;
-    private static Usuario usuarioAtual;
-    Scanner sc = new Scanner(System.in);
-
-    public App() {
-    };
-
-    public void executa() {
-        inicializaDados();
-        Usuario u = null;
-        int id;
-        while (u == null) {
-            System.out.println("Digite o ID do usuário que está utilizando o sistema:");
-            id = sc.nextInt();
-            sc.nextLine();
-            u = usuarioAtual.consultaUsuario(id);
-            if (u == null) {
-                System.out.println("usuário não encontrado, digite novamente!");
-            }
-        }
-        this.usuarioAtual = u;
-        menuPrincipal();
-    }
+    private ArrayList<Usuario> usuarios = new ArrayList<>();
+    private ListaDePedidos listaDePedidos = new ListaDePedidos();
+    private Usuario usuarioAtual;
 
     private void inicializaDados() {
-
         usuarios = new ArrayList<>();
         listaDePedidos = new ListaDePedidos();
 
@@ -77,502 +61,265 @@ public class App {
         usuarios.add(func14);
         Funcionario func15 = new Funcionario("Juliana Machado", juridico, 15);
         usuarios.add(func15);
-
     }
 
-    private void menuPrincipal() {
-        int opcao;
+    public void menuPrincipal() {
+        inicializaDados();
+        Scanner sc = new Scanner(System.in);
+        int idUsuario;
+
         do {
-            System.out.println("-----------------------------------------------\n"
-                    + "[1] Usuários\n"
-                    + "[2] Pedidos\n"
-                    + "[3] Itens\n"
-                    + "[4] Departamentos\n"
-                    + "[5] Estatísticas gerais\n"
-                    + "[0] Sair\n"
-                    + "-----------------------------------------------");
-            System.out.print("Selecione a opção desejada:");
+            System.out.print("Por favor, insira seu ID de usuário: ");
+            idUsuario = sc.nextInt();
+            sc.nextLine();
+
+            usuarioAtual = encontrarUsuarioPorID(idUsuario);
+            if (usuarioAtual == null) {
+                System.out.println("Usuário não encontrado. Por favor, insira um ID válido.");
+            }
+        } while (usuarioAtual == null);
+
+        if (usuarioAtual instanceof Administrador) {
+            System.out.println("Usuário identificado como Administrador.");
+            menuAdministrador();
+        } else if (usuarioAtual instanceof Funcionario) {
+            System.out.println("Usuário identificado como Funcionário.");
+            menuFuncionario();
+        }
+
+        sc.close();
+    }
+
+    private Usuario encontrarUsuarioPorID(int id) {
+        for (Usuario u : usuarios) {
+            if (u.getId() == id) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    public void menuAdministrador() {
+        Scanner sc = new Scanner(System.in);
+        int opcao;
+
+        do {
+            System.out.println("Menu do Administrador:");
+            System.out.println("1. Aprovar/Reprovar Pedido");
+            System.out.println("2. Concluir Pedido");
+            System.out.println("3. Criar Pedido");
+            System.out.println("4. Pesquisar Pedidos por Data");
+            System.out.println("5. Listar Pedidos por Status");
+            System.out.println("6. Listar Itens de Pedido");
+            System.out.println("0. Sair");
             opcao = sc.nextInt();
+            sc.nextLine();
 
             switch (opcao) {
                 case 1:
-                    menuUsuario();
+                    aprovarReprovarPedido();
                     break;
                 case 2:
-                    menuPedidos();
+                    alterarStatusParaConcluido();
                     break;
                 case 3:
-                    menuItens();
+                    criarPedido();
                     break;
                 case 4:
-                    menuDepartamentos();
+                    pesquisarPedidosPorData();
                     break;
                 case 5:
-                    mostrarEstatisticasGerais(); 
+                    listarPedidosPorStatus();
+                    break;
+                case 6:
+                    listarItens();
                     break;
                 case 0:
-                    System.out.println("Saindo...");
+                    System.out.println("Saindo do menu...");
                     break;
                 default:
-                    System.out.println("Opção inválida! Tente novamente.");
+                    System.out.println("Opção inválida.");
+                    break;
             }
         } while (opcao != 0);
+        sc.close();
     }
 
-    private void menuPedidos() {
+    public void menuFuncionario() {
+        Scanner sc = new Scanner(System.in);
         int opcao;
+
         do {
-            System.out.println("-----------------------------------------------\n"
-                    + "[1] Registrar pedido\n"
-                    + "[2] Listar todos pedidos\n"
-                    + "[3] Aprovar pedido\n"
-                    + "[4] Procurar pedidos\n"
-                    + "[5] Excluir pedido\n"
-                    + "[0] Voltar\n"
-                    + "-----------------------------------------------");
-            System.out.print("Escolha uma opção: ");
+            System.out.println("Menu do Funcionário:");
+            System.out.println("1. Criar Pedido");
+            System.out.println("2. Listar Itens de Pedido");
+            System.out.println("0. Sair");
             opcao = sc.nextInt();
+            sc.nextLine();
 
             switch (opcao) {
                 case 1:
-                    registrarPedido();
+                    criarPedido();
                     break;
                 case 2:
-                    menuItens();
-                    break;
-                case 3:
-                    aprovarPedido();
-                    break;
-                case 4:
-                    menuProcuraPedidos();
-                    break;
-                case 5:
-                    excluirPedido();
+                    listarItens();
                     break;
                 case 0:
-                    System.out.println("Voltando ao menu principal...");
-                    menuPrincipal();
+                    System.out.println("Saindo do menu...");
                     break;
                 default:
-                    System.out.println("Opção inválida! Tente novamente.");
+                    System.out.println("Opção inválida.");
+                    break;
             }
         } while (opcao != 0);
+        sc.close();
     }
 
-    private void menuProcuraPedidos() {
-        int opcao;
-        do {
-            System.out.println("-----------------------------------------------\n"
-                    + "[1] Procurar pedidos entre duas datas\n"
-                    + "[2] Procurar pedidos por funcionário\n"
-                    + "[3] Procurar pedidos por item\n"
-                    + "[0] Voltar\n"
-                    + "-----------------------------------------------");
-            System.out.print("Escolha uma opção: ");
-            opcao = sc.nextInt();
+    private void criarPedido() {
+        Scanner sc = new Scanner(System.in);
+        ArrayList<Item> itens = new ArrayList<>();
 
-            switch (opcao) {
-                case 1:
-                    procurarPedidosPorData();
-                    break;
-                case 2:
-                    procurarPedidosPorFuncionario();
-                    break;
-                case 3:
-                    procurarPedidosPorFuncionario();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu de pedidos...");
-                    menuPedidos();
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-            }
-        } while (opcao != 0);
-    }
+        System.out.println("Menu de Criação de Pedido");
 
-    private void menuUsuario() {
-        int opcao;
-        do {
-            System.out.println("-----------------------------------------------\n"
-                    + "[1] Listar usuários\n"
-                    + "[2] Trocar usuário\n"
-                    + "[0] Voltar\n"
-                    + "-----------------------------------------------");
-            System.out.print("Escolha uma opção: ");
-            opcao = sc.nextInt();
-
-            switch (opcao) {
-                case 1:
-                    System.out.println("Lista de Usuários:");
-                    for (Usuario usuario : usuarios) {
-                        System.out.println(usuario);
-                    }
-                    break;
-                case 2:
-                    trocarUsuario();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu principal...");
-                    menuPrincipal();
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-            }
-        } while (opcao != 0);
-    }
-
-    private void menuItens() {
-        int opcao;
-        do {
-            System.out.println("-----------------------------------------------\n"
-                    + "[1] Listar todos os itens\n"
-                    + "[0] Voltar\n"
-                    + "-----------------------------------------------");
-            System.out.print("Escolha uma opção: ");
-            opcao = sc.nextInt();
-
-            switch (opcao) {
-                case 1:
-                    // loista todos os itens
-                    for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-                        for (Item item : pedido.getLista()) {
-                            System.out.println("Descrição: " + item.getDescricao());
-                            System.out.println("Valor unitário: " + item.getValorUnitario());
-                            System.out.println("Quantidade: " + item.getQuantidade());
-                            System.out.println("-----------------------");
-                        }
-                    }
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu principal...");
-                    menuPrincipal(); //confirmar se essas chamadas estão corretas
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-            }
-        } while (opcao != 0);
-    }
-
-    private void menuDepartamentos() {
-        int opcao;
-        do {
-            System.out.println("-----------------------------------------------\n"
-                    + "[1] Listar todos os departamentos\n"
-                    + "[0] Voltar\n"
-                    + "-----------------------------------------------");
-            System.out.print("Escolha uma opção: ");
-            opcao = sc.nextInt();
-
-            switch (opcao) {
-                case 1:
-                    listarDepartamentos();
-                    break;
-                case 0:
-                    System.out.println("Voltando ao menu principal...");
-                    menuPrincipal();
-                    break;
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
-            }
-        } while (opcao != 0);
-    }
-
-    private void mostrarEstatisticasGerais() {
-        ListaDePedidos listaDePedidos = new ListaDePedidos();
-
-        // a varivel criada, recebe o numero total de pedidos
-        int totalPedidos = listaDePedidos.getListaPedidos().size();
-
-        // aqui recebbe o numero de pedidos aprovados e o de pedidos reprovados.
-        int aprovados = 0;
-        int reprovados = 0;
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            if (pedido.getStatus() == Status.APROVADO) {
-                aprovados++;
-            } else if (pedido.getStatus() == Status.REPROVADO) {
-                reprovados++;
-            }
-        }
-
-        // percentuais dos aprovados e reprovados
-        double percentAprovados = (double) aprovados / totalPedidos * 100;
-        double percentReprovados = (double) reprovados / totalPedidos * 100;
-
-        // numero de pedidos nos últimos 30 dias e valor médio
-        int pedidosUltimos30Dias = 0;
-        double valorTotalUltimos30Dias = 0;
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            LocalDate dataPedido = LocalDate.parse(pedido.getData());
-            if (dataPedido.isAfter(LocalDate.now().minusDays(30))) {
-                pedidosUltimos30Dias++;
-                valorTotalUltimos30Dias += pedido.getValorDoPedido();
-            }
-        }
-        double valorMedioUltimos30Dias = pedidosUltimos30Dias > 0 ? valorTotalUltimos30Dias / pedidosUltimos30Dias : 0;
-
-        // valor total de cada categoria nos últimos 30 dias
-        double valorTotalFinanceiro = 0;
-        double valorTotalRH = 0;
-        double valorTotalManutencao = 0;
-        double valorTotalEngenharia = 0;
-        double valorTotalJuridico = 0;
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            LocalDate dataPedido = LocalDate.parse(pedido.getData());
-            if (dataPedido.isAfter(LocalDate.now().minusDays(30))) {
-                switch (pedido.getDepartamento()) {
-                    case FINANCEIRO:
-                        valorTotalFinanceiro += pedido.getValorDoPedido();
-                        break;
-                    case RECURSOS_HUMANOS:
-                        valorTotalRH += pedido.getValorDoPedido();
-                        break;
-                    case MANUTENCAO:
-                        valorTotalManutencao += pedido.getValorDoPedido();
-                        break;
-                    case ENGENHARIA:
-                        valorTotalEngenharia += pedido.getValorDoPedido();
-                        break;
-                    case JURIDICO:
-                        valorTotalJuridico += pedido.getValorDoPedido();
-                        break;
-                }
-            }
-        }
-
-        // detalhes do pedido de aquisição de maior valor ainda aberto
-        Pedido pedidoMaiorValorAberto = null;
-        double maiorValorAberto = 0;
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            if (pedido.getStatus() == Status.ABERTO && pedido.getValorDoPedido() > maiorValorAberto) {
-                maiorValorAberto = pedido.getValorDoPedido();
-                pedidoMaiorValorAberto = pedido;
-            }
-        }
-
-        // exibe tudo
-        System.out.println("-----------------------------------------------");
-        System.out.println("Estatísticas Gerais do Sistema:");
-        System.out.println("Número total de pedidos: " + totalPedidos);
-        System.out.println("Pedidos aprovados: " + aprovados + " (" + String.format("%.2f", percentAprovados) + "%)");
-        System.out
-                .println("Pedidos reprovados: " + reprovados + " (" + String.format("%.2f", percentReprovados) + "%)");
-        System.out.println("Número de pedidos nos últimos 30 dias: " + pedidosUltimos30Dias);
-        System.out.println(
-                "Valor médio dos pedidos nos últimos 30 dias: " + String.format("%.2f", valorMedioUltimos30Dias));
-        System.out.println("Valor total de cada categoria nos últimos 30 dias:");
-        System.out.println(" - Financeiro: " + String.format("%.2f", valorTotalFinanceiro));
-        System.out.println(" - Recursos Humanos: " + String.format("%.2f", valorTotalRH));
-        System.out.println(" - Manutenção: " + String.format("%.2f", valorTotalManutencao));
-        System.out.println(" - Engenharia: " + String.format("%.2f", valorTotalEngenharia));
-        System.out.println(" - Jurídico: " + String.format("%.2f", valorTotalJuridico));
-        if (pedidoMaiorValorAberto != null) {
-            System.out.println("Detalhes do pedido de aquisição de maior valor ainda aberto:");
-            System.out.println(pedidoMaiorValorAberto.toString());
-        } else {
-            System.out.println("Não há pedidos abertos.");
-        }
-        System.out.println("-----------------------------------------------");
-    }
-
-    private void listarDepartamentos() {
-        System.out.println("-----------------------------------------------");
-        System.out.println("Lista de Departamentos:");
-
-        // anda pela lista de Usuarios para achar os admins
-        for (Usuario usuario : usuarios) {
-            if (usuario instanceof Administrador) {
-                Administrador administrador = (Administrador) usuario;
-                Departamento departamento = administrador.getDepartamento();
-                TipoDepartamento tipo = departamento.getNome();
-                double orcamento = departamento.getValorMaximoPedido();
-                System.out.println(tipo.getNome() + ": R$" + String.format("%.2f", orcamento));
-            }
-        }
-
-        System.out.println("-----------------------------------------------");
-    }
-
-    private void trocarUsuario() {
-        System.out.print("Digite o nome do novo usuário: ");
-        String nomeNovoUsuario = sc.nextLine();
-        boolean usuarioEncontrado = false;
-
-        for (Usuario usuario : usuarios) {
-            if (usuario.getNome().equalsIgnoreCase(nomeNovoUsuario)) {
-                usuarioAtual = usuario;
-                usuarioEncontrado = true;
-                System.out.println("Usuário trocado para: " + usuario.getNome());
-                break;
-            }
-        }
-
-        if (!usuarioEncontrado) {
-            System.out.println("Usuário não encontrado!");
-        }
-    }
-
-    private void procurarPedidosPorData() {
-        System.out.println("Digite as datas no formato (YYYY-MM-DD)");
-        System.out.print("Digite a data inicial: ");
-        String dataInicialStr = sc.next();
-        LocalDate dataInicial = LocalDate.parse(dataInicialStr);
-
-        System.out.print("Digite a data final: ");
-        String dataFinalStr = sc.next();
-        LocalDate dataFinal = LocalDate.parse(dataFinalStr);
-
-        System.out.println("Pedidos entre " + dataInicial + " e " + dataFinal + ":");
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            LocalDate dataPedido = LocalDate.parse(pedido.getData());
-            if (dataPedido.isAfter(dataInicial) && dataPedido.isBefore(dataFinal)) {
-                System.out.println(pedido);
-            }
-        }
-    }
-
-    private void procurarPedidosPorFuncionario() {
-        System.out.print("Digite o nome do funcionário: ");
-        String nomeFuncionario = sc.next();
-
-        System.out.println("Pedidos do funcionário " + nomeFuncionario + ":");
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            if (pedido.getU().getNome().equalsIgnoreCase(nomeFuncionario)) {
-                System.out.println(pedido);
-            }
-        }
-    }
-
-    private void procurarPedidosPorItem() {
-        System.out.print("Digite a descrição do item: ");
-        String descricaoItem = sc.next();
-
-        System.out.println("Pedidos com o item '" + descricaoItem + "':");
-        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            if (pedido.procuraItemDescricao(descricaoItem)) {
-                System.out.println(pedido);
-            }
-        }
-    }
-
-    private void registrarPedido() {
-        System.out.println("Registro de novo pedido...");
-
-        // solicita informações do usuário para criar o pedido
-        System.out.print("Digite o ID do usuário solicitante: ");
-        int idUsuario = sc.nextInt();
-        Usuario usuarioSolicitante = usuarioAtual.consultaUsuario(idUsuario);
-
-        if (usuarioSolicitante == null) {
-            System.out.println("Usuário não encontrado. Registro de pedido cancelado.");
-            return;
-        }
-
-        System.out.print("Digite a data do pedido (formato: AAAA-MM-DD): ");
-        String dataPedido = sc.next();
-
-        ArrayList<Item> itensPedido = new ArrayList<>();
-
-        boolean continuarAdicionandoItens = true;
-        while (continuarAdicionandoItens) {
-            System.out.print("Digite a descrição do item: ");
-            String descricaoItem = sc.next();
-
-            System.out.print("Digite o valor unitário do item: ");
-            double valorItem = sc.nextDouble();
-
-            System.out.print("Digite a quantidade do item: ");
-            int quantidadeItem = sc.nextInt();
-
-            Item novoItem = new Item(descricaoItem, valorItem, quantidadeItem);
-            itensPedido.add(novoItem);
-
-            System.out.print("Deseja adicionar mais itens? (S/N): ");
-            String continuar = sc.next().toUpperCase();
-            continuarAdicionandoItens = continuar.equals("S");
-        }
-
-        // cria o pedido
-        Pedido novoPedido = new Pedido(usuarioSolicitante, listaDePedidos.getListaPedidos().size() + 1, dataPedido,
-                null, Status.ABERTO, itensPedido);
-        listaDePedidos.addPedido(novoPedido);
-
-        System.out.println("Pedido registrado com sucesso!");
-    }
-
-    private void aprovarPedido() {
-        // lista todos os pedidos abertos para aprovação
-        ArrayList<Pedido> pedidosAbertos = listaDePedidos.buscarPedidosPorStatus(Status.ABERTO);
-
-        if (pedidosAbertos.isEmpty()) {
-            System.out.println("Não há pedidos abertos para aprovação.");
-            return;
-        }
-
-        // mostra os pedidos abertos para aprovação
-        System.out.println("Pedidos abertos para aprovação:");
-        for (Pedido pedido : pedidosAbertos) {
-            System.out.println("ID: " + pedido.getId() + " - Data: " + pedido.getData() + " - Solicitante: "
-                    + pedido.getU().getNome());
-        }
-
-        // solicita ao administrador que selecione um pedido para aprovação
-        System.out.print("Digite o ID do pedido que deseja aprovar: ");
+        System.out.print("ID do Pedido: ");
         int idPedido = sc.nextInt();
+        sc.nextLine();
 
-        // busca o pedido selecionado
-        Pedido pedidoSelecionado = listaDePedidos.visualizaDetalhesID(idPedido);
+        System.out.print("Data (dd/MM/yyyy): ");
+        String data = sc.nextLine();
 
-        if (pedidoSelecionado == null) {
-            System.out.println("Pedido não encontrado.");
-            return;
+        String dataConclusao = null;
+
+        boolean adicionarMaisItens = true;
+        while (adicionarMaisItens) {
+            System.out.print("Descrição do Item: ");
+            String descricao = sc.nextLine();
+
+            System.out.print("Valor Unitário: ");
+            double valorUnitario = sc.nextDouble();
+            sc.nextLine();
+
+            System.out.print("Quantidade: ");
+            int quantidade = sc.nextInt();
+            sc.nextLine();
+
+            Item item = new Item(descricao, valorUnitario, quantidade);
+            itens.add(item);
+
+            System.out.print("Deseja adicionar mais itens? (sim/não): ");
+            String resposta = sc.nextLine();
+            adicionarMaisItens = resposta.equalsIgnoreCase("sim");
         }
 
-        // confere se o usuário logado é um administrador
-        if (!(usuarioAtual instanceof Administrador)) {
-            System.out.println("Você não tem permissão para aprovar pedidos.");
-            return;
+        Pedido pedido = new Pedido(usuarioAtual, idPedido, data, dataConclusao, Status.ABERTO, itens);
+        listaDePedidos.addPedido(pedido);
+        System.out.println("Pedido criado com sucesso!");
+        sc.close();
+    }
+
+    private void listarItens() {
+        for (Pedido pedido : listaDePedidos.getListaPedidos()) {
+            for (Item item : pedido.getLista()) {
+                System.out.println("Descrição: " + item.getDescricao());
+                System.out.println("Valor unitário: " + item.getValorUnitario());
+                System.out.println("Quantidade: " + item.getQuantidade());
+                System.out.println("-----------------------");
+            }
         }
+    }
 
-        // aprova  o pedido
-        boolean aprovado = pedidoSelecionado.setStatus(Status.APROVADO, usuarioAtual);
-
-        if (aprovado) {
-            System.out.println("Pedido aprovado com sucesso!");
+    private void aprovarReprovarPedido() {
+        Scanner sc = new Scanner(System.in);
+    
+        System.out.print("ID do Pedido: ");
+        int idPedido = sc.nextInt();
+        sc.nextLine();
+    
+        Pedido pedido = listaDePedidos.visualizaDetalhesID(idPedido);
+        if (pedido != null) {
+            System.out.println("Pedido encontrado:");
+            System.out.println(pedido);
+    
+            System.out.print("Deseja aprovar ou reprovar o pedido? (aprovar/reprovar): ");
+            String decisao = sc.nextLine();
+            Status novoStatus = decisao.equalsIgnoreCase("aprovar") ? Status.APROVADO : Status.REPROVADO;
+            if (pedido.setStatus(novoStatus, usuarioAtual)) {
+                if (novoStatus == Status.APROVADO) {
+                    System.out.println("Pedido aprovado com sucesso!");
+                } else {
+                    System.out.println("Pedido reprovado com sucesso!");
+                }
+            } else {
+                System.out.println("Não foi possível " + decisao + "ar o pedido.");
+            }
         } else {
-            System.out.println("Não foi possível aprovar o pedido.");
+            System.out.println("Pedido não encontrado.");
         }
+        sc.close();
     }
 
-    private void excluirPedido(){
-        System.out.print("Digite o ID do pedido a ser excluído: ");
-                    int idPedido = sc.nextInt();
+    private void alterarStatusParaConcluido() {
+        Scanner sc = new Scanner(System.in);
 
-                    // Busca o pedido na lista de pedidos
-                    Pedido pedidoExcluir = null;
-                    for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-                        if (pedido.getId() == idPedido) {
-                            pedidoExcluir = pedido;
-                            break;
-                        }
-                    }
+        System.out.print("ID do Pedido: ");
+        int idPedido = sc.nextInt();
+        sc.nextLine();
 
-                    // Verifica se o pedido foi encontrado
-                    if (pedidoExcluir != null) {
-                        // pega o funcionário atual
-                        Funcionario funcionarioAtual = usuarioAtual instanceof Funcionario ? (Funcionario) usuarioAtual
-                                : null;
+        Pedido pedido = listaDePedidos.visualizaDetalhesID(idPedido);
+        if (pedido != null) {
+            System.out.println("Pedido encontrado:");
+            System.out.println(pedido);
 
-                        // confere se o funcionário atual é válido e se o pedido pode ser excluído
-                        if (funcionarioAtual != null && listaDePedidos.excluiPedido(funcionarioAtual, pedidoExcluir)) {
-                            System.out.println("Pedido excluído com sucesso.");
-                        } else {
-                            System.out.println(
-                                    "Não foi possível excluir o pedido. Verifique se o pedido está aberto e se você tem permissão para excluí-lo.");
-                        }
-                    } else {
-                        System.out.println("Pedido não encontrado.");
-                    }
+            if (pedido.getStatus() == Status.CONCLUIDO) {
+                System.out.println("O pedido já está concluído.");
+            } else {
+                System.out.print("Data de Conclusão (dd/MM/yyyy): ");
+                String dataConclusao = sc.nextLine();
+                pedido.setDataDeConclusao(dataConclusao);
+                pedido.setStatus(Status.CONCLUIDO, usuarioAtual);
+                System.out.println("Pedido concluído com sucesso!");
+            }
+        } else {
+            System.out.println("Pedido não encontrado.");
+        }
+        sc.close();
     }
 
+    private void listarPedidosPorStatus() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Status (ABERTO, APROVADO, REPROVADO, CONCLUIDO): ");
+        String statusStr = sc.nextLine();
+        Status status = Status.valueOf(statusStr.toUpperCase());
+
+        ArrayList<Pedido> pedidos = listaDePedidos.buscarPedidosPorStatus(status);
+        if (pedidos != null) {
+            for (Pedido pedido : pedidos) {
+                System.out.println(pedido);
+            }
+        } else {
+            System.out.println("Nenhum pedido encontrado com o status " + statusStr);
+        }
+        sc.close();
+    }
+
+    private void pesquisarPedidosPorData() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Data de abertura (dd/MM/yyyy): ");
+        String dataInicio = sc.nextLine();
+
+        System.out.print("Data de conclusão (dd/MM/yyyy): ");
+        String dataFim = sc.nextLine();
+
+        ArrayList<Pedido> pedidos = listaDePedidos.pesquisaPorData(dataInicio, dataFim);
+        if (pedidos != null) {
+            for (Pedido pedido : pedidos) {
+                System.out.println(pedido);
+            }
+        } else {
+            System.out.println("Nenhum pedido encontrado no intervalo de datas informado.");
+        }
+        sc.close();
+    }
 }
