@@ -6,6 +6,6 @@ public class Funcionario extends Usuario {
     }
 
     public String toString() {
-        return "Nome: " + this.nome + ", Id: " + this.id + ", Departamento" + this.departamento + "\n";
+        return  "Funcionario"+ "Nome: " + this.nome + ", Id: " + this.id + ", Departamento" + this.departamento.getNome() + "\n";
     }
 }

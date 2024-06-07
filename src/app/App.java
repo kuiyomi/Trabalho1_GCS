@@ -9,7 +9,6 @@ public class App {
 
     private Usuario u;
     private  ListaDePedidos listaDePedidos;
-    private  Usuario usuarios;
     Scanner sc = new Scanner(System.in);
 
     public App() {
@@ -30,7 +29,7 @@ public class App {
                 System.out.println("usuário não encontrado, digite novamente!");
          }
         }
-        this.usuarios = u;
+       
         menuPrincipal();
     }
 
