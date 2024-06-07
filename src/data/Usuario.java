@@ -2,17 +2,17 @@ package data;
 
 import java.util.ArrayList;
 
-public abstract class Usuario {
+public  class Usuario {
     protected String nome;
     protected int id;
     protected Departamento departamento;
-    private static ArrayList<Usuario> usuarios; 
+    private static ArrayList<Usuario> usuarios = new ArrayList<>(); 
 
     public Usuario (String nome, Departamento departamento, int id) {
         this.nome = nome;
         this.id = id; 
         this.departamento = departamento;
-        usuarios = new ArrayList<>();
+       
     }
 
     public String getNome() {
@@ -27,14 +27,12 @@ public abstract class Usuario {
         return departamento;
     }
 
-    public boolean adicionaUsuario(Usuario user){
-        if (consultaUsuario(user.getId())!= null ) {
-            return false; 
-        }
-        return usuarios.add(user);
+    public static boolean adicionaUsuario(Usuario user){
+       usuarios.add(user);
+       return true;
     }
 
-    public Usuario consultaUsuario(int id){
+    public static Usuario consultaUsuario(int id){
         for(Usuario user : usuarios){
             if (user.getId() == id) {
                 return user;
@@ -42,6 +40,19 @@ public abstract class Usuario {
         }
             return null; 
         }
-        
-    public abstract String toString();
+
+
+        public static Usuario consultaUsuarioNome(String nome){
+            for(Usuario user : usuarios){
+                if (user.getNome().equals(nome)) {
+                    return user;
+                }
+            }
+                return null; 
+            }
+
+        public static ArrayList<Usuario> getUsuarios(){
+            return usuarios;
+        }   
+    
 }
