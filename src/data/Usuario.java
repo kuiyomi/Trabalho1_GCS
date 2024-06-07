@@ -27,23 +27,21 @@ public abstract class Usuario {
         return departamento;
     }
 
-    public boolean adicionaUsuario(Usuario u){
-        if (consultaUsuario(u.getId())!= null ) {
+    public boolean adicionaUsuario(Usuario user){
+        if (consultaUsuario(user.getId())!= null ) {
             return false; 
         }
-        return usuarios.add(u);
+        return usuarios.add(user);
     }
 
     public Usuario consultaUsuario(int id){
-        for(Usuario u : usuarios){
-            if (u.getId() == id) {
-                return u;
+        for(Usuario user : usuarios){
+            if (user.getId() == id) {
+                return user;
             }
         }
             return null; 
         }
-    
-    
-    public abstract String toString();
         
+    public abstract String toString();
 }

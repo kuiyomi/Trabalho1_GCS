@@ -9,5 +9,4 @@ public class Administrador extends Usuario {
     public String toString(){
         return "Nome: "+this.nome+", Id: "+this.id+", Departamento"+this.departamento+"\n";
     }
-    
 }
