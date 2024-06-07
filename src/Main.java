@@ -1,5 +1,8 @@
+import app.App;
+
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        App app = new App();
+        app.executar(); // Aguardando futura implementação da classe App
     }
 }
