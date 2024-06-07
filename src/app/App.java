@@ -79,9 +79,6 @@ public class App {
         Usuario.adicionaUsuario(func15);
         System.out.println("funcionarios adicionados");
 
-        for(Usuario z : Usuario.getUsuarios()){
-            System.out.println(z.toString());
-        }
 
     }
 
