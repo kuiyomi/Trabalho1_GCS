@@ -1,6 +1,5 @@
 package app;
 
-import java.util.Locale;
 import java.util.Scanner;
 import data.*;
 import java.time.LocalDate;
@@ -8,35 +7,36 @@ import java.util.ArrayList;
 
 public class App {
 
-    private static ArrayList<Usuario> usuarios;
-    private static ListaDePedidos listaDePedidos;
-    private static Usuario usuarioAtual;
+    private Usuario u;
+    private  ListaDePedidos listaDePedidos;
     Scanner sc = new Scanner(System.in);
 
     public App() {
+        u = null;
+        listaDePedidos = new ListaDePedidos();
     };
 
     public void executa() {
         inicializaDados();
-        Usuario u = null;
+        
         int id;
         while (u == null) {
             System.out.println("Digite o ID do usuário que está utilizando o sistema:");
             id = sc.nextInt();
             sc.nextLine();
-            u = usuarioAtual.consultaUsuario(id);
+            u = Usuario.consultaUsuario(id);
             if (u == null) {
                 System.out.println("usuário não encontrado, digite novamente!");
-            }
+         }
         }
-        this.usuarioAtual = u;
+       
         menuPrincipal();
     }
 
     private void inicializaDados() {
 
-        usuarios = new ArrayList<>();
-        listaDePedidos = new ListaDePedidos();
+       
+        
 
         Departamento financeiro = new Departamento(TipoDepartamento.FINANCEIRO, 10000.00, new ArrayList<>());
         Departamento rh = new Departamento(TipoDepartamento.RECURSOS_HUMANOS, 10000.00, new ArrayList<>());
@@ -44,39 +44,41 @@ public class App {
         Departamento engenharia = new Departamento(TipoDepartamento.ENGENHARIA, 10000.00, new ArrayList<>());
         Departamento juridico = new Departamento(TipoDepartamento.JURIDICO, 10000.00, new ArrayList<>());
 
-        Administrador adm0 = new Administrador("Betina Hugendobler", rh, 2);
-        usuarios.add(adm0);
+        Administrador adm0 = new Administrador("Betina Hugendobler", rh, 0);
+        Usuario.adicionaUsuario(adm0);
         Administrador adm1 = new Administrador("Paulo Plinio", financeiro, 1);
-        usuarios.add(adm1);
+        Usuario.adicionaUsuario(adm1);
         Administrador adm2 = new Administrador("Betina Hugendobler", rh, 2);
-        usuarios.add(adm2);
+        Usuario.adicionaUsuario(adm2);
         Administrador adm3 = new Administrador("Vini VP", manutencao, 3);
-        usuarios.add(adm3);
+        Usuario.adicionaUsuario(adm3);
         Administrador adm4 = new Administrador("Pedro MP", engenharia, 4);
-        usuarios.add(adm4);
+        Usuario.adicionaUsuario(adm4);
         Administrador adm5 = new Administrador("Lucas Meio", juridico, 5);
-        usuarios.add(adm5);
+        Usuario.adicionaUsuario(adm5);
 
         Funcionario func6 = new Funcionario("Joana Silva", financeiro, 6);
-        usuarios.add(func6);
+        Usuario.adicionaUsuario(func6);
         Funcionario func7 = new Funcionario("Mário Souza", financeiro, 7);
-        usuarios.add(func7);
+        Usuario.adicionaUsuario(func7);
         Funcionario func8 = new Funcionario("Carla Santos", rh, 8);
-        usuarios.add(func8);
+        Usuario.adicionaUsuario(func8);
         Funcionario func9 = new Funcionario("Gabriel Almeida", rh, 9);
-        usuarios.add(func9);
+        Usuario.adicionaUsuario(func9);
         Funcionario func10 = new Funcionario("Fernanda Oliveira", manutencao, 10);
-        usuarios.add(func10);
+        Usuario.adicionaUsuario(func10);
         Funcionario func11 = new Funcionario("Rafaela Pereira", manutencao, 11);
-        usuarios.add(func11);
+        Usuario.adicionaUsuario(func11);
         Funcionario func12 = new Funcionario("Gustavo Costa", engenharia, 12);
-        usuarios.add(func12);
+        Usuario.adicionaUsuario(func12);
         Funcionario func13 = new Funcionario("André Rodrigues", engenharia, 13);
-        usuarios.add(func13);
+        Usuario.adicionaUsuario(func13);
         Funcionario func14 = new Funcionario("Marcela Nunes", juridico, 14);
-        usuarios.add(func14);
+        Usuario.adicionaUsuario(func14);
         Funcionario func15 = new Funcionario("Juliana Machado", juridico, 15);
-        usuarios.add(func15);
+        Usuario.adicionaUsuario(func15);
+        System.out.println("funcionarios adicionados");
+
 
     }
 
@@ -205,7 +207,7 @@ public class App {
             switch (opcao) {
                 case 1:
                     System.out.println("Lista de Usuários:");
-                    for (Usuario usuario : usuarios) {
+                    for (Usuario usuario : Usuario.getUsuarios()) {
                         System.out.println(usuario);
                     }
                     break;
@@ -380,7 +382,7 @@ public class App {
         System.out.println("Lista de Departamentos:");
 
         // anda pela lista de Usuarios para achar os admins
-        for (Usuario usuario : usuarios) {
+        for (Usuario usuario : Usuario.getUsuarios()) {
             if (usuario instanceof Administrador) {
                 Administrador administrador = (Administrador) usuario;
                 Departamento departamento = administrador.getDepartamento();
@@ -396,18 +398,14 @@ public class App {
     private void trocarUsuario() {
         System.out.print("Digite o nome do novo usuário: ");
         String nomeNovoUsuario = sc.nextLine();
-        boolean usuarioEncontrado = false;
-
-        for (Usuario usuario : usuarios) {
-            if (usuario.getNome().equalsIgnoreCase(nomeNovoUsuario)) {
-                usuarioAtual = usuario;
-                usuarioEncontrado = true;
-                System.out.println("Usuário trocado para: " + usuario.getNome());
-                break;
-            }
+        
+        if(Usuario.consultaUsuarioNome(nomeNovoUsuario)!=null){
+            u = Usuario.consultaUsuarioNome(nomeNovoUsuario);
         }
 
-        if (!usuarioEncontrado) {
+        
+
+        else {
             System.out.println("Usuário não encontrado!");
         }
     }
@@ -437,7 +435,7 @@ public class App {
 
         System.out.println("Pedidos do funcionário " + nomeFuncionario + ":");
         for (Pedido pedido : listaDePedidos.getListaPedidos()) {
-            if (pedido.getU().getNome().equalsIgnoreCase(nomeFuncionario)) {
+            if (pedido.getUser().getNome().equalsIgnoreCase(nomeFuncionario)) {
                 System.out.println(pedido);
             }
         }
@@ -461,7 +459,8 @@ public class App {
         // solicita informações do usuário para criar o pedido
         System.out.print("Digite o ID do usuário solicitante: ");
         int idUsuario = sc.nextInt();
-        Usuario usuarioSolicitante = usuarioAtual.consultaUsuario(idUsuario);
+        sc.nextLine();
+        Usuario usuarioSolicitante = Usuario.consultaUsuario(idUsuario);
 
         if (usuarioSolicitante == null) {
             System.out.println("Usuário não encontrado. Registro de pedido cancelado.");
@@ -513,7 +512,7 @@ public class App {
         System.out.println("Pedidos abertos para aprovação:");
         for (Pedido pedido : pedidosAbertos) {
             System.out.println("ID: " + pedido.getId() + " - Data: " + pedido.getData() + " - Solicitante: "
-                    + pedido.getU().getNome());
+                    + pedido.getUser().getNome());
         }
 
         // solicita ao administrador que selecione um pedido para aprovação
@@ -529,13 +528,13 @@ public class App {
         }
 
         // confere se o usuário logado é um administrador
-        if (!(usuarioAtual instanceof Administrador)) {
+        if (!(u instanceof Administrador)) {
             System.out.println("Você não tem permissão para aprovar pedidos.");
             return;
         }
 
         // aprova  o pedido
-        boolean aprovado = pedidoSelecionado.setStatus(Status.APROVADO, usuarioAtual);
+        boolean aprovado = pedidoSelecionado.setStatus(Status.APROVADO, u);
 
         if (aprovado) {
             System.out.println("Pedido aprovado com sucesso!");
@@ -560,7 +559,7 @@ public class App {
                     // Verifica se o pedido foi encontrado
                     if (pedidoExcluir != null) {
                         // pega o funcionário atual
-                        Funcionario funcionarioAtual = usuarioAtual instanceof Funcionario ? (Funcionario) usuarioAtual
+                        Funcionario funcionarioAtual = u instanceof Funcionario ? (Funcionario) u
                                 : null;
 
                         // confere se o funcionário atual é válido e se o pedido pode ser excluído

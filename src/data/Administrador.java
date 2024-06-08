@@ -7,6 +7,6 @@ public class Administrador extends Usuario {
     }
 
     public String toString(){
-        return "Nome: "+this.nome+", Id: "+this.id+", Departamento"+this.departamento+"\n";
+        return "Administrador" + "Nome: "+this.nome+", Id: "+this.id+", Departamento"+this.departamento.getNome()+"\n";
     }
 }
